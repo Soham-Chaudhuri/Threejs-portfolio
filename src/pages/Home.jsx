@@ -1,4 +1,4 @@
-import React, { Suspense, useState,useEffect,useRef } from "react";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import Loader from "../components/Loader";
 import Island from "../models/Island";
@@ -7,22 +7,30 @@ import Plane from "../models/Plane";
 import HomeInfo from "../components/HomeInfo";
 import sakura from "../assets/sakura.mp3";
 import Footer from "../components/Footer";
+
 const Home = () => {
   const [isRotating, setIsRotating] = useState(false);
-  const [currentStage,setCurrentStage] = useState(1);
-  const [isPlayingMusic, setIsPlayingMusic] = useState(true);
+  const [currentStage, setCurrentStage] = useState(1);
   const audioRef = useRef(new Audio(sakura));
-  audioRef.current.volume = 0.4;
-  audioRef.current.loop = true;
+
   useEffect(() => {
-    if (isPlayingMusic) {
-      audioRef.current.play();
-    }
+    const handleUserInteraction = () => {
+      audioRef.current.volume = 0.4;
+      audioRef.current.loop = true;
+      audioRef.current.play().catch((error) => {
+        console.error("Error playing audio:", error);
+      });
+      window.removeEventListener("click", handleUserInteraction);
+    };
+
+    window.addEventListener("click", handleUserInteraction);
 
     return () => {
       audioRef.current.pause();
+      window.removeEventListener("click", handleUserInteraction);
     };
-  }, [isPlayingMusic]);
+  }, []);
+
   const adjustIslandForScreenSize = () => {
     let screenScale = null,
       screenPosition = [0, -6.5, -43],
@@ -34,6 +42,7 @@ const Home = () => {
     }
     return [screenScale, screenPosition, rotation];
   };
+
   const adjustPlaneForScreenSize = () => {
     let screenScale, screenPosition;
     if (window.innerWidth > 768) {
@@ -45,13 +54,14 @@ const Home = () => {
     }
     return [screenScale, screenPosition];
   };
-  const [islandScale, islandPosition, islandRotation] =
-    adjustIslandForScreenSize();
+
+  const [islandScale, islandPosition, islandRotation] = adjustIslandForScreenSize();
   const [planeScale, planePosition] = adjustPlaneForScreenSize();
+
   return (
     <section className="w-full h-screen relative">
       <div className="absolute top-28 left-0 right-0 z-10 flex items-center justify-center">
-        {currentStage&& <HomeInfo currentStage={currentStage}/>}
+        {currentStage && <HomeInfo currentStage={currentStage} />}
       </div>
       <Canvas
         className={`w-full h-screen bg-transparent ${
@@ -67,7 +77,7 @@ const Home = () => {
             groundColor="#000000"
             intensity={1}
           />
-          <Sky isRotating={isRotating}/>
+          <Sky isRotating={isRotating} />
           <Plane
             isRotating={isRotating}
             scale={planeScale}
