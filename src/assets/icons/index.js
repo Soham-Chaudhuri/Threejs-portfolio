@@ -26,6 +26,14 @@ import arrow from './arrow.svg'
 import contact from './contact.svg'
 import soundon from './soundon.png'
 import soundoff from './soundoff.png'
+import c from './c.svg'
+import flask from './flask.svg'
+import matplotlib from './matplotlib-1.svg'
+import numpy from './numpy-1.svg'
+import pandas from './pandas.svg'
+import python from './python-5.svg'
+import sql from './sql.svg'
+import firebase from './firebase-1.svg'
 
 export {
     css,
@@ -55,5 +63,13 @@ export {
     arrow,
     contact,
     soundon,
-    soundoff
+    soundoff,
+    c,
+    flask,
+    matplotlib,
+    numpy,
+    pandas,
+    python,
+    sql,
+    firebase,
 }

@@ -11,7 +11,7 @@ import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import islandScene from "../assets/3d/island.glb";
 import { a } from "@react-spring/three";
-const Island = ({ isRotating, setIsRotating, ...props }) => {
+const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
   const islandRef = useRef();
   const { gl, viewport } = useThree();
   const { nodes, materials } = useGLTF(islandScene);
@@ -55,19 +55,28 @@ const Island = ({ isRotating, setIsRotating, ...props }) => {
       setIsRotating(false);
     }
   };
+  const handleWheel = (e) => {
+    e.preventDefault();
+    setIsRotating(true);
+    const scrollSpeed = e.deltaY * 0.001; 
+    rotationSpeed.current += scrollSpeed;
+    setIsRotating(false);
+  };
   useEffect(() => {
     const canvas = gl.domElement;
     canvas.addEventListener("pointerdown", handlePointerDown);
     canvas.addEventListener("pointerup", handlePointerUp);
     canvas.addEventListener("pointermove", handlePointerMove);
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("keyup", handleKeyUp);
+    // document.addEventListener("wheel", handleWheel);
+    // document.addEventListener("keydown", handleKeyDown);
+    // document.addEventListener("keyup", handleKeyUp);
     return () => {
       canvas.removeEventListener("pointerdown", handlePointerDown);
       canvas.removeEventListener("pointerup", handlePointerUp);
       canvas.removeEventListener("pointermove", handlePointerMove);
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("keyup", handleKeyUp);
+      // document.removeEventListener("wheel", handleWheel);
+      // document.removeEventListener("keydown", handleKeyDown);
+      // document.removeEventListener("keyup", handleKeyUp);
     };
   }, [gl, handlePointerDown, handlePointerUp, handlePointerDown]);
 

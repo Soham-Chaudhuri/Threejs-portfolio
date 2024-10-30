@@ -1,11 +1,28 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState,useEffect,useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import Loader from "../components/Loader";
 import Island from "../models/Island";
 import Sky from "../models/Sky";
 import Plane from "../models/Plane";
+import HomeInfo from "../components/HomeInfo";
+import sakura from "../assets/sakura.mp3";
+import Footer from "../components/Footer";
 const Home = () => {
   const [isRotating, setIsRotating] = useState(false);
+  const [currentStage,setCurrentStage] = useState(1);
+  const [isPlayingMusic, setIsPlayingMusic] = useState(true);
+  const audioRef = useRef(new Audio(sakura));
+  audioRef.current.volume = 0.4;
+  audioRef.current.loop = true;
+  useEffect(() => {
+    if (isPlayingMusic) {
+      audioRef.current.play();
+    }
+
+    return () => {
+      audioRef.current.pause();
+    };
+  }, [isPlayingMusic]);
   const adjustIslandForScreenSize = () => {
     let screenScale = null,
       screenPosition = [0, -6.5, -43],
@@ -33,8 +50,9 @@ const Home = () => {
   const [planeScale, planePosition] = adjustPlaneForScreenSize();
   return (
     <section className="w-full h-screen relative">
-      {/* <div className="absolute left-0 right-0 z-10 flex items-center justify-center">
-      </div> */}
+      <div className="absolute top-28 left-0 right-0 z-10 flex items-center justify-center">
+        {currentStage&& <HomeInfo currentStage={currentStage}/>}
+      </div>
       <Canvas
         className={`w-full h-screen bg-transparent ${
           isRotating ? "cursor-grabbing" : "cursor-grab"
@@ -49,11 +67,11 @@ const Home = () => {
             groundColor="#000000"
             intensity={1}
           />
-          <Sky />
+          <Sky isRotating={isRotating}/>
           <Plane
             isRotating={isRotating}
-            planeScale={planeScale}
-            planePosition={planePosition}
+            scale={planeScale}
+            position={planePosition}
             rotation={[0, 20, 0]}
           />
           <Island
@@ -62,9 +80,11 @@ const Home = () => {
             rotation={islandRotation}
             isRotating={isRotating}
             setIsRotating={setIsRotating}
+            setCurrentStage={setCurrentStage}
           />
         </Suspense>
       </Canvas>
+      {/* <Footer/> */}
     </section>
   );
 };
