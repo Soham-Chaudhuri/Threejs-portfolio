@@ -227,7 +227,7 @@ export const projects = [
     {
         iconUrl: threads,
         theme: 'btn-back-green',
-        name: 'Convolution 9.2',
+        name: 'Convolution 9.0',
         description: 'Developed and managed the main event signup and registration platform for Convolution 9.0, a premier techno-management fest organized by the Electrical Engineering Department of Jadavpur University.',
         link: 'https://convolutionjuee.co.in/',
     },
